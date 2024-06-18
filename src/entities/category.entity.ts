@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Article } from "./Article";
+import { Article } from "./article.entity";
 import { DateTransformer } from "../utils/dateTransform";
 
 @Entity("category", { schema: "boke" })

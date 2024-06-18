@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
 import { UserService } from './user.service';
-import { User } from "../entities/User";
-import { LoginDto } from "../dto/login.dto"
+import { User } from "../entities/user.entity";
+import { JwtGuard } from "../guard/jwt.guard";
 
 @Controller('user')
 export class UserController {
@@ -12,6 +12,7 @@ export class UserController {
     return this.userService.findOne(+userId);
   }
 
+  @UseGuards(JwtGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
@@ -20,11 +21,6 @@ export class UserController {
   @Post()
   create(@Body() user:User) {
     return this.userService.create(user);
-  }
-
-  @Post('login')
-  login(@Body() loginDto:LoginDto){
-    return this.userService.login(loginDto)
   }
 
   @Post('search')

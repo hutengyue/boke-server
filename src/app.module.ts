@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import {User} from "./entities/User";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import { TagModule } from './tag/tag.module';
 import { VisitModule } from './visit/visit.module';
@@ -13,6 +12,7 @@ import { MessageModule } from './message/message.module';
 import { CommentModule } from './comment/comment.module';
 import { FriendModule } from './friend/friend.module';
 import { CategoryModule } from './category/category.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [UserModule,
@@ -23,7 +23,7 @@ import { CategoryModule } from './category/category.module';
     username:'root',
     password:'565656',
     database:'boke',
-    timezone:'Z',
+    timezone:'+08:00',
     entities: [__dirname + '/entities/*{.ts,.js}'],
     autoLoadEntities:true,
     synchronize:true
@@ -36,7 +36,8 @@ import { CategoryModule } from './category/category.module';
     MessageModule,
     CommentModule,
     FriendModule,
-    CategoryModule],
+    CategoryModule,
+    AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

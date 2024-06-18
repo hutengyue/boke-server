@@ -1,14 +1,11 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Article } from "./Article";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Article } from "./article.entity";
 import { DateTransformer } from "../utils/dateTransform";
 
 @Entity("comment", { schema: "boke" })
 export class Comment {
   @PrimaryGeneratedColumn({ type: "int", name: "commentId" })
   commentId: number;
-
-  @Column("int", { name: "articleId" })
-  articleId: number;
 
   @Column("int", { name: "userId" })
   userId: number;
@@ -23,5 +20,6 @@ export class Comment {
   createAt: Date;
 
   @ManyToOne(() => Article, article => article.comments)
+  @JoinColumn({name:'articleId'})
   article: Article;
 }

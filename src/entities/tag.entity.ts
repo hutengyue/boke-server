@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DateTransformer } from "../utils/dateTransform";
-import { Article } from "./Article";
+import { Article } from "./article.entity";
 
 @Entity("tag", { schema: "boke" })
 export class Tag {
@@ -13,7 +13,7 @@ export class Tag {
   @CreateDateColumn({ type:"datetime",name:"createAt" ,transformer:new DateTransformer()})
   createAt: Date;
 
-  @ManyToMany(() => Article,article => article.tags)
+  @ManyToMany(() => Article, article => article.tags)
   @JoinTable({
     name: 'tags_articles',
     joinColumn: {

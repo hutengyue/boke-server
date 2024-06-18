@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DateTransformer } from "../utils/dateTransform";
+import * as bcrypt from 'bcryptjs'
 
 @Entity("user", { schema: "boke" })
 export class User {
@@ -12,7 +13,7 @@ export class User {
   @Column("varchar", { name: "username", length: 255 })
   username: string;
 
-  @Column("varchar", { name: "password", length: 255 })
+  @Column("varchar", { name: "password", length: 255,select:false })
   password: string;
 
   @Column("int", { name: "sex", default: () => "'1'" })
@@ -44,4 +45,9 @@ export class User {
     }
   })
   friends:User[];
+
+  @BeforeInsert()
+  async hashPassword() {
+    if (this.password) this.password = bcrypt.hashSync(this.password, 10);
+  }
 }

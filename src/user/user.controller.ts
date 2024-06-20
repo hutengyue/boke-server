@@ -12,15 +12,10 @@ export class UserController {
     return this.userService.findOne(+userId);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
-  }
-
-  @Post()
-  create(@Body() user:User) {
-    return this.userService.create(user);
   }
 
   @Post('search')

@@ -1,6 +1,17 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import { DateTransformer } from "../utils/dateTransform";
 import * as bcrypt from 'bcryptjs'
+import { Comment } from "./comment.entity";
+import { Group } from "./group.entity";
 
 @Entity("user", { schema: "boke" })
 export class User {
@@ -31,6 +42,8 @@ export class User {
   @CreateDateColumn({ type:"datetime",name:"createAt" ,transformer:new DateTransformer()})
   createAt: Date;
 
+  @OneToMany(() => Group, group => group.user)
+  groups: Group[];
 
   @ManyToMany(() => User)
   @JoinTable({

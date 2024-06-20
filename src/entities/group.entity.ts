@@ -1,13 +1,16 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { DateTransformer } from "../utils/dateTransform";
+import { Category } from "./category.entity";
+import { User } from "./user.entity";
 
 @Entity("group", { schema: "boke" })
 export class Group {
   @PrimaryGeneratedColumn({ type: "int", name: "groupId" })
   groupId: number;
 
-  @Column("int", { name: "userId" })
-  userId: number;
+  @ManyToOne(() => User, user => user.groups)
+  @JoinColumn({name:'userId'})
+  user: User;
 
   @Column("varchar", { name: "message", length: 255 })
   message: string;

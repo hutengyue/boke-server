@@ -13,16 +13,17 @@ import { CommentModule } from './comment/comment.module';
 import { FriendModule } from './friend/friend.module';
 import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
+import config from "./config";
 
 @Module({
   imports: [UserModule,
     TypeOrmModule.forRoot({
     type:'mysql',
-    host:'localhost',
-    port:3306,
-    username:'root',
-    password:'565656',
-    database:'boke',
+    host:config.mysql.host,
+    port:config.mysql.port,
+    username:config.mysql.user,
+    password:config.mysql.pass,
+    database:config.mysql.database,
     timezone:'+08:00',
     entities: [__dirname + '/entities/*{.ts,.js}'],
     autoLoadEntities:true,

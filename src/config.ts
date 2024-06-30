@@ -4,7 +4,7 @@ export default {
     "pass": '565656',
     "host": "localhost",
     "port": 3306,
-    "database": "boke"
+    "database": "cavalry1"
   },
   "host": {
     "url": "<server-url>",

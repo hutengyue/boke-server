@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {User} from "../entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import convert from "../utils/convert";
 
 @Injectable()
 export class UserService {
@@ -14,8 +15,15 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  findOne(userId: number) {
-    return this.userRepository.findOneBy({ userId });
+  async findOne(user: Partial<User>) {
+    let target = await this.userRepository.findOneBy({userId: user.userId});
+    let result = {
+      ...target,
+      headImg:convert(user.headImg),
+      userId:user.userId.toString(),
+      sex:user.sex.toString()
+    }
+    return result
   }
 
   findByName(username:string){

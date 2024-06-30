@@ -43,6 +43,9 @@ export class Article {
   @JoinColumn({name:'categoryId'})
   category: Category;
 
+  @Column()
+  categoryId: number;
+
   @ManyToMany(() => Tag, tag => tag.articles)
   tags: Tag[];
 

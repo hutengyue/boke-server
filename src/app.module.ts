@@ -13,6 +13,7 @@ import { CommentModule } from './comment/comment.module';
 import { FriendModule } from './friend/friend.module';
 import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
+import { UploadModule } from './upload/upload.module';
 import config from "./config";
 
 @Module({
@@ -38,7 +39,8 @@ import config from "./config";
     CommentModule,
     FriendModule,
     CategoryModule,
-    AuthModule],
+    AuthModule,
+    UploadModule],
   controllers: [AppController],
   providers: [AppService],
 })

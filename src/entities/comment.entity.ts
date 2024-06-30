@@ -22,4 +22,7 @@ export class Comment {
   @ManyToOne(() => Article, article => article.comments)
   @JoinColumn({name:'articleId'})
   article: Article;
+
+  @Column()
+  articleId: number;
 }

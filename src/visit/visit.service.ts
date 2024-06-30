@@ -12,4 +12,7 @@ export class VisitService {
   findAll(){
     return this.visitRepository.find()
   }
+  getCount(){
+    return this.visitRepository.count()
+  }
 }

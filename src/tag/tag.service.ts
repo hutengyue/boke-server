@@ -10,17 +10,22 @@ export class TagService {
     private readonly tagRepository: Repository<Tag>,
   ) {}
 
-  findAll() {
-    return this.tagRepository.find({
+  async findAll() {
+    let tags = await this.tagRepository.find({
       relations: ['articles']
     })
+    const result = tags.map(tag => ({
+      ...tag,
+      number:tag.articles.length
+    }));
+    return result
   }
 
-  getArticles(tagId:number){
-    let tag = this.tagRepository.createQueryBuilder("tag")
-    .leftJoinAndSelect("tag.articles", "article")
-    .where("tag.tagId = :tagId", { tagId:1 })
-    .getOne();
+  async getArticles(tagId: number) {
+    let tag = await this.tagRepository.createQueryBuilder("tag")
+      .leftJoinAndSelect("tag.articles", "article")
+      .where("tag.tagId = :tagId", {tagId: 1})
+      .getOne();
     return tag
   }
 }

@@ -7,5 +7,21 @@ export class ArticleController {
   @Get()
   findAll(){
     return this.articleService.findAll()
+
+  }
+
+  @Post('searchByCategory')
+  findByCategory(@Body() body:any){
+    return this.articleService.findByCategory(body.categoryId,body.pageNo,body.pageSize)
+  }
+
+  @Post('searchByArticleId')
+  findByArticle(@Body() articleId:number){
+
+  }
+
+  @Get('count')
+  getCount(){
+    return this.articleService.getCount()
   }
 }

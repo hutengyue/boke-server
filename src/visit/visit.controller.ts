@@ -8,4 +8,8 @@ export class VisitController {
   getAll(){
     return this.visitService.findAll()
   }
+  @Get('count')
+  getCount(){
+    return this.visitService.getCount()
+  }
 }

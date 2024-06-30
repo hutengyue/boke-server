@@ -12,6 +12,9 @@ export class Group {
   @JoinColumn({name:'userId'})
   user: User;
 
+  @Column()
+  userId: number;
+
   @Column("varchar", { name: "message", length: 255 })
   message: string;
 

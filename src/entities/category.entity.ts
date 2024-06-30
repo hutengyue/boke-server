@@ -15,5 +15,4 @@ export class Category {
 
   @OneToMany(() => Article, article => article.category)
   articles: Article[];
-
 }

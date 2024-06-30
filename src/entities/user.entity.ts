@@ -12,6 +12,7 @@ import { DateTransformer } from "../utils/dateTransform";
 import * as bcrypt from 'bcryptjs'
 import { Comment } from "./comment.entity";
 import { Group } from "./group.entity";
+import {Message} from "./message.entity";
 
 @Entity("user", { schema: "boke" })
 export class User {
@@ -44,6 +45,9 @@ export class User {
 
   @OneToMany(() => Group, group => group.user)
   groups: Group[];
+
+  @OneToMany(() => Message, message => message.user)
+  messages: Message[];
 
   @ManyToMany(() => User)
   @JoinTable({

@@ -3,16 +3,16 @@ import { DateTransformer } from "../utils/dateTransform";
 import { Category } from "./category.entity";
 import { User } from "./user.entity";
 
-@Entity("group", { schema: "boke" })
-export class Group {
-  @PrimaryGeneratedColumn({ type: "int", name: "groupId" })
+@Entity("gmessage", { schema: "boke" })
+export class Gmessage {
+  @PrimaryGeneratedColumn({ type: "int", name: "gmessageId" })
   groupId: number;
 
-  @ManyToOne(() => User, user => user.groups)
+  @ManyToOne(() => User, user => user.gmessages)
   @JoinColumn({name:'userId'})
   user: User;
 
-  @Column()
+  @Column("int")
   userId: number;
 
   @Column("varchar", { name: "message", length: 255 })

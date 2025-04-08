@@ -12,8 +12,8 @@ export class TagController {
   }
 
   @Post('articles')
-  getArticles(@Body() tagId:number){
-    return this.tagService.getArticles(tagId)
+  getArticles(@Body() body:any){
+    return this.tagService.getArticles(body.tagName)
   }
 
 }

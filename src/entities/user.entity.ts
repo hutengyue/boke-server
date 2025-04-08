@@ -11,8 +11,9 @@ import {
 import { DateTransformer } from "../utils/dateTransform";
 import * as bcrypt from 'bcryptjs'
 import { Comment } from "./comment.entity";
-import { Group } from "./group.entity";
+import { Gmessage } from "./gmessage.entity";
 import {Message} from "./message.entity";
+import {Pmessage} from "./pmessage.entity";
 
 @Entity("user", { schema: "boke" })
 export class User {
@@ -43,8 +44,8 @@ export class User {
   @CreateDateColumn({ type:"datetime",name:"createAt" ,transformer:new DateTransformer()})
   createAt: Date;
 
-  @OneToMany(() => Group, group => group.user)
-  groups: Group[];
+  @OneToMany(() => Gmessage, gmessage => gmessage.user)
+  gmessages: Gmessage[];
 
   @OneToMany(() => Message, message => message.user)
   messages: Message[];

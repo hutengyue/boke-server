@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Article } from "../entities/article.entity";
 import { Repository } from "typeorm";
+import * as fs from "fs";
+import * as path from 'path';
 import convert from "../utils/convert";
 
 
@@ -14,6 +16,20 @@ export class ArticleService {
 
   findAll(){
     return this.articleRepository.find()
+  }
+
+  async findOne(articleId:number) {
+    let article = await this.articleRepository.findOne({
+      where: {articleId: articleId},
+      relations: ['tags', 'category'],
+    })
+    let result = {
+      ...article,
+      articleImg:convert(article.articleImg),
+      articleMessage:fs.readFileSync(path.join('./public/',article.articleMessage),'utf-8')
+    }
+
+    return result
   }
 
   async findByCategory(categoryId: number,pageNo:number,pageSize:number) {
@@ -30,6 +46,7 @@ export class ArticleService {
     }))
     return result
   }
+
 
   findByArticle(articleId:number){
 

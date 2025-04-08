@@ -21,11 +21,11 @@ export class TagService {
     return result
   }
 
-  async getArticles(tagId: number) {
-    let tag = await this.tagRepository.createQueryBuilder("tag")
+  async getArticles(tagName: string) {
+    let result = await this.tagRepository.createQueryBuilder("tag")
       .leftJoinAndSelect("tag.articles", "article")
-      .where("tag.tagId = :tagId", {tagId: 1})
-      .getOne();
-    return tag
+      .where("tag.tagName = :tagName", {tagName: tagName})
+      .getMany();
+    return result
   }
 }

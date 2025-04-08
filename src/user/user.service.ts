@@ -3,6 +3,7 @@ import {User} from "../entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import convert from "../utils/convert";
+import { log } from 'console';
 
 @Injectable()
 export class UserService {
@@ -13,6 +14,11 @@ export class UserService {
 
   findAll() {
     return this.userRepository.find();
+  }
+
+
+  find(userId:number){
+    return this.userRepository.findOneBy({userId})
   }
 
   async findOne(user: Partial<User>) {
@@ -26,8 +32,18 @@ export class UserService {
     return result
   }
 
-  findByName(username:string){
-    return this.userRepository.findOneBy({username})
+  async findByName(username: string) {
+    const friend = await this.userRepository.findOneBy({ username });
+    let message, type;
+    if (friend) {
+      message = '搜索成功';
+      type = 'success';
+    } else {
+      message = '未找到对应的用户。';
+      type = 'error';
+    }
+    friend.headImg = convert(friend.headImg);
+    return { message, type, user:friend };
   }
 
   findByEmail(email:string){

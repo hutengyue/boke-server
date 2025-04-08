@@ -10,6 +10,11 @@ export class ArticleController {
 
   }
 
+  @Post()
+  findOne(@Body() body:any){
+    return this.articleService.findOne(body.articleId)
+  }
+
   @Post('searchByCategory')
   findByCategory(@Body() body:any){
     return this.articleService.findByCategory(body.categoryId,body.pageNo,body.pageSize)

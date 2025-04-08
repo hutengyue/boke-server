@@ -14,6 +14,7 @@ import { FriendModule } from './friend/friend.module';
 import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
+import { WebsocketGateway } from './websocket/websocket.gateway';
 import config from "./config";
 
 @Module({
@@ -42,6 +43,6 @@ import config from "./config";
     AuthModule,
     UploadModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,WebsocketGateway],
 })
 export class AppModule {}

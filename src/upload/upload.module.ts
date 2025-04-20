@@ -25,5 +25,6 @@ import * as multer from "multer";
   ],
   controllers: [UploadController],
   providers: [UploadService],
+  exports:[UploadService]
 })
 export class UploadModule {}

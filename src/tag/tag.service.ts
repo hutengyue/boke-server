@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Tag } from "../entities/tag.entity";
+import convert from "../utils/convert";
+
 
 @Injectable()
 export class TagService {
@@ -21,11 +23,18 @@ export class TagService {
     return result
   }
 
-  async getArticles(tagName: string) {
+  async getArticles(tagId: number) {
     let result = await this.tagRepository.createQueryBuilder("tag")
       .leftJoinAndSelect("tag.articles", "article")
-      .where("tag.tagName = :tagName", {tagName: tagName})
+      .where("tag.tagId = :tagId", {tagId: tagId})
       .getMany();
+    result = result.map(tag => ({
+     ...tag,
+      articles:tag.articles.map(article=>({
+        ...article,
+        articleImg:convert(article.articleImg),
+      }))
+    }))
     return result
   }
 }

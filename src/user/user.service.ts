@@ -4,10 +4,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import convert from "../utils/convert";
 import { log } from 'console';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class UserService {
   constructor(
+    private uploadService: UploadService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -25,7 +27,6 @@ export class UserService {
     let target = await this.userRepository.findOneBy({userId: user.userId});
     let result = {
       ...target,
-      headImg:convert(user.headImg),
       userId:user.userId.toString(),
       sex:user.sex.toString()
     }
@@ -42,7 +43,7 @@ export class UserService {
       message = '未找到对应的用户。';
       type = 'error';
     }
-    friend.headImg = convert(friend.headImg);
+    // friend.headImg = convert(friend.headImg);
     return { message, type, user:friend };
   }
 
@@ -50,4 +51,34 @@ export class UserService {
     return this.userRepository.findOneBy({email})
   }
 
+  async update(user: Partial<User>) {
+    const { password, ...updateData } = user;
+
+    // 使用 update 方法只更新指定字段
+    return this.userRepository.update(
+      { userId: user.userId },
+      updateData
+    );
+  }
+
+
+  async getUsersByPage(page: number, limit: number) {
+    const [users, total] = await this.userRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      order: {
+        userId: 'DESC'  // 按用户ID降序排序
+      }
+    });
+
+    return {
+      items: users,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  }
 }

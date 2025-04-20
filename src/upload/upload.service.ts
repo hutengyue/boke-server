@@ -7,11 +7,17 @@ const { policy2Str } = require('ali-oss/lib/common/utils/policy2Str');
 
 @Injectable()
 export class UploadService {
+    private client: any;
 
-    async uploadFile(file){
-        return {path:'image/'+file.filename}
+    constructor() {
+        // 初始化 OSS 客户端
+        this.client = new OSS({
+            bucket: 'cavalryy',
+            region: 'oss-cn-hangzhou',
+            accessKeyId: 'YOUR_ACCESS_KEY_ID',
+            accessKeySecret: 'YOUR_ACCESS_KEY_SECRET'
+        });
     }
-
 
     GenerateSignature = async () => {
         // 初始化STS客户端
@@ -31,7 +37,7 @@ export class UploadService {
         // 初始化OSS Client
         const client = new OSS({
             bucket: 'cavalryy', // 请替换为目标Bucket名称
-            region: 'cn-hangzhou', // 请替换为标Bucket所在地域
+            region: 'oss-cn-hangzhou', // 请替换为标Bucket所在地域
             accessKeyId,
             accessKeySecret,
             stsToken: securityToken,

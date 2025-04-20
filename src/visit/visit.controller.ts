@@ -1,16 +1,25 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body,Query,DefaultValuePipe,ParseIntPipe} from '@nestjs/common';
 import { VisitService } from './visit.service';
 
 @Controller('visit')
 export class VisitController {
   constructor(private readonly visitService: VisitService) {}
 
-  @Get('number')
+  @Get('count')
   async getVisitNumber() {
     const count = await this.visitService.getVisitCount();
     return count;
   }
 
+  @Get()
+  async getVisit(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    const result = await this.visitService.getVisit(page, limit);
+    return result;
+  }
+  
   @Get('detail')
   async getVisitDetail() {
     const result = await this.visitService.getVisitDetail();

@@ -17,7 +17,8 @@ export class MessageService {
         })
         let result = messages.map(message=>({
             ...message,
-            user:convert(message.user.headImg)
+            // user:convert(message.user.headImg)
+            user:message.user.headImg
         }))
         return result
     }

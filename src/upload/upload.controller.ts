@@ -13,13 +13,13 @@ export class UploadController {
   @Post('image')
   @UseInterceptors(fileInterceptor)
   async uploadImage(@UploadedFile() file){
-    return this.uploadService.uploadFile(file)
+    // return this.uploadService.uploadFile(file)
   }
 
   @Post('md')
   @UseInterceptors(fileInterceptor)
   async uploadMd(@UploadedFile() file){
-    return this.uploadService.uploadFile(file)
+    // return this.uploadService.uploadFile(file)
   }
 
   @Get('getOssConfig')

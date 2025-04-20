@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req} from "@nestjs/common";
+import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req,Query,DefaultValuePipe,ParseIntPipe} from "@nestjs/common";
 import { UserService } from './user.service';
 import { User } from "../entities/user.entity";
 import { JwtGuard } from "../guard/jwt.guard";
@@ -14,6 +14,14 @@ export class UserController {
     return this.userService.findOne(req.user);
   }
 
+  @Get('list')
+  async getUsersByPage(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return await this.userService.getUsersByPage(page, limit);
+  }
+
   // @UseGuards(JwtGuard)
   @Get('123')
   findAll() {
@@ -23,5 +31,10 @@ export class UserController {
   @Post('search')
   findByName(@Body() body:any) {
     return this.userService.findByName(body.username);
+  }
+
+  @Post('update')
+  update(@Body() body:any) {
+    return this.userService.update(body.user);
   }
 }

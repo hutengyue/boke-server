@@ -68,4 +68,7 @@ export class User {
   async hashPassword() {
     if (this.password) this.password = bcrypt.hashSync(this.password, 10);
   }
+
+  @OneToMany(() => Comment, comment => comment.user)
+  comments: Comment[];
 }

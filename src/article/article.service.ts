@@ -14,22 +14,32 @@ export class ArticleService {
     private readonly articleRepository:Repository<Article>
   ){}
 
-  findAll(){
+  findAllArticles(){
     return this.articleRepository.find()
   }
 
-  async findOne(articleId:number) {
+  async findByArticleId(articleId:number) {
     let article = await this.articleRepository.findOne({
       where: {articleId: articleId},
       relations: ['tags', 'category'],
-    })
+      select: {
+        category: {
+          categoryName: true
+        },
+        tags: {
+          tagName: true
+        }
+      }
+    });
+
     let result = {
       ...article,
-      articleImg:convert(article.articleImg),
-      articleMessage:fs.readFileSync(path.join('./public/',article.articleMessage),'utf-8')
+      articleImg: convert(article.articleImg),
+      articleMessage: fs.readFileSync(path.join('./public/',article.articleMessage),'utf-8'),
+      categoryName: article.category?.categoryName,
+      tagNames: article.tags?.map(tag => tag.tagName)
     }
-
-    return result
+    return result;
   }
 
   async findByCategory(categoryId: number,pageNo:number,pageSize:number) {
@@ -47,12 +57,17 @@ export class ArticleService {
     return result
   }
 
-
-  findByArticle(articleId:number){
-
-  }
-
   getCount(){
     return this.articleRepository.count()
+  }
+
+  async incrementHeat(articleId: number) {
+    const article = await this.articleRepository.findOneBy({ articleId });
+    if (!article) {
+      throw new Error('文章不存在');
+    }
+
+    article.heat += 1;
+    await this.articleRepository.save(article);
   }
 }

@@ -34,7 +34,6 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
     let result = {
       ...user,
-      headImg: convert(user.headImg),
       token:'Bearer ' + token
     }
     return result

@@ -13,7 +13,7 @@ export class TagController {
 
   @Post('articles')
   getArticles(@Body() body:any){
-    return this.tagService.getArticles(body.tagName)
+    return this.tagService.getArticles(body.tagId)
   }
 
 }

@@ -1,18 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,ParseIntPipe } from '@nestjs/common';
 import { ArticleService } from './article.service';
 
 @Controller('article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
   @Get()
-  findAll(){
-    return this.articleService.findAll()
+  findAllArticles(){
+    return this.articleService.findAllArticles()
 
   }
 
   @Post()
-  findOne(@Body() body:any){
-    return this.articleService.findOne(body.articleId)
+  findByArticleId(@Body() body:any){
+    return this.articleService.findByArticleId(body.articleId)
   }
 
   @Post('searchByCategory')
@@ -28,5 +28,11 @@ export class ArticleController {
   @Get('count')
   getCount(){
     return this.articleService.getCount()
+  }
+
+  @Post(':id/heat')
+  async incrementHeat(@Param('id', ParseIntPipe) articleId: number) {
+    const heat = await this.articleService.incrementHeat(articleId);
+    return { heat };
   }
 }

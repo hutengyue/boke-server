@@ -25,7 +25,6 @@ export class GroupService {
         })
         let result = groups.map(group=>({
             ...group,
-            headImg:convert(group.user.headImg),
             createAt:convertTime(group.createAt)
         }))
         return result
@@ -39,7 +38,6 @@ export class GroupService {
         let newGroup = await this.groupRepository.save(gmessage)
         let result = {
             ...newGroup,
-            headImg:convert(newGroup.user.headImg),
             createAt:convertTime(newGroup.createAt)
         }
         return result

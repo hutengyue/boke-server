@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn,OneToMany } from "typeorm";
 import { Article } from "./article.entity";
 import { DateTransformer } from "../utils/dateTransform";
+import { User } from "./user.entity";
 
 @Entity("comment", { schema: "boke" })
 export class Comment {
@@ -25,4 +26,15 @@ export class Comment {
 
   @Column()
   articleId: number;
+
+  @ManyToOne(() => User,user => user.comments)
+  @JoinColumn({name: 'userId'})
+  user: User;
+
+  @ManyToOne(() => Comment, comment => comment.replies)
+  @JoinColumn({ name: 'toId' })
+  parent: Comment;
+
+  @OneToMany(() => Comment, comment => comment.parent)
+  replies: Comment[];
 }

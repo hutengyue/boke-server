@@ -35,15 +35,18 @@ export class CommentService {
   }
 
   async getArticleComments(articleId: number, page: number, limit: number) {
+    // ... existing code ...
+
     const [comments, total] = await this.commentRepository
       .createQueryBuilder('comment')
       .leftJoinAndSelect('comment.article', 'article')
       .leftJoinAndSelect('comment.user', 'user')
-      .leftJoinAndSelect('comment.replies', 'replies')
+      .leftJoinAndSelect('comment.replies', 'replies', 'replies.toId = comment.commentId')
       .leftJoinAndSelect('replies.user', 'replyUser')
       .where('comment.articleId = :articleId', { articleId })
       .andWhere('comment.toId IS NULL')  // 只获取顶层评论
       .orderBy('comment.createAt', 'DESC')
+      .addOrderBy('replies.createAt', 'ASC')  // 回复按时间正序，这样第一条回复就是最早的
       .skip((page - 1) * limit)
       .take(limit)
       .getManyAndCount();
@@ -52,11 +55,11 @@ export class CommentService {
       ...comment,
       username: comment.user.username,
       headImg: comment.user.headImg,
-      replies: comment.replies?.map(reply => ({
+      replies: comment.replies ? comment.replies.map(reply => ({
         ...reply,
         username: reply.user.username,
         headImg: reply.user.headImg
-      }))
+      })) : []
     }));
 
     return {

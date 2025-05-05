@@ -28,7 +28,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Post('search')
+  @Post('searchByUsername')
   findByName(@Body() body:any) {
     return this.userService.findByName(body.username);
   }
@@ -36,5 +36,10 @@ export class UserController {
   @Post('update')
   update(@Body() body:any) {
     return this.userService.update(body.user);
+  }
+
+  @Post('searchByUserId')
+  findByUserId(@Body() body:any) {
+    return this.userService.findByUserId(body.userId);
   }
 }

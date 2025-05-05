@@ -5,8 +5,9 @@ import { UserModule } from './user/user.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import { TagModule } from './tag/tag.module';
 import { VisitModule } from './visit/visit.module';
-import { GroupModule } from './group/group.module';
+import { GmessageModule } from './gmessage/gmessage.module';
 import { ArticleModule } from './article/article.module';
+import { GroupModule } from './group/group.module';
 import { LogModule } from './log/log.module';
 import { MessageModule } from './message/message.module';
 import { CommentModule } from './comment/comment.module';
@@ -15,6 +16,7 @@ import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
+import { ApplyModule } from './apply/apply.module';
 import config from "./config";
 
 @Module({
@@ -33,6 +35,7 @@ import config from "./config";
   }),
     TagModule,
     VisitModule,
+    GmessageModule,
     GroupModule,
     ArticleModule,
     LogModule,
@@ -41,7 +44,8 @@ import config from "./config";
     FriendModule,
     CategoryModule,
     AuthModule,
-    UploadModule],
+    UploadModule,
+    ApplyModule],
   controllers: [AppController],
   providers: [AppService,WebsocketGateway],
 })

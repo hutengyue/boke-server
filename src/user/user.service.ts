@@ -33,18 +33,14 @@ export class UserService {
     return result
   }
 
+  async findByUserId(userId:number){
+    const user = await this.userRepository.findOneBy({ userId });
+    return user
+  }
+
   async findByName(username: string) {
-    const friend = await this.userRepository.findOneBy({ username });
-    let message, type;
-    if (friend) {
-      message = '搜索成功';
-      type = 'success';
-    } else {
-      message = '未找到对应的用户。';
-      type = 'error';
-    }
-    // friend.headImg = convert(friend.headImg);
-    return { message, type, user:friend };
+    const user = await this.userRepository.findOneBy({ username });
+    return user
   }
 
   findByEmail(email:string){

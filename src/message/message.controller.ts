@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { MessageService } from './message.service';
+import { JwtGuard } from "../guard/jwt.guard";
+import type { Request } from "express";
 
 @Controller('message')
 export class MessageController {
@@ -10,4 +12,13 @@ export class MessageController {
     return this.messageService.findAll()
   }
 
+  @UseGuards(JwtGuard)
+  @Post('send')
+  async sendMessage(
+    @Req() req: Request,
+    @Body() body: { content: string }
+  ) {
+    const userId = (req.user as { userId: number }).userId;
+    return await this.messageService.sendMessage(userId, body.content);
+  }
 }

@@ -11,8 +11,10 @@ export class FriendController {
   }
 
   @Get(':userId')
-  findOne(@Param('userId') userId: number){
+  getFriends(@Param('userId') userId: number){
     return this.friendService.getFriends(userId);
   }
+
+  
 
 }

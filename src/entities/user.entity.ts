@@ -14,6 +14,7 @@ import { Comment } from "./comment.entity";
 import { Gmessage } from "./gmessage.entity";
 import {Message} from "./message.entity";
 import {Pmessage} from "./pmessage.entity";
+import { Group } from "./group.entity";
 
 @Entity("user", { schema: "boke" })
 export class User {
@@ -71,4 +72,7 @@ export class User {
 
   @OneToMany(() => Comment, comment => comment.user)
   comments: Comment[];
+
+  @ManyToMany(() => Group, group => group.members)
+  groups: Group[];
 }

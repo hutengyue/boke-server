@@ -23,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       where: { userId: payload.userId },
     });
     if (!existUser) {
-      throw new UnauthorizedException("token验证失败");
+      throw new UnauthorizedException({msg:"身份验证失败"});
     }
     return existUser;
   }

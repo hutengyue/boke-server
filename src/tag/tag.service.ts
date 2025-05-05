@@ -31,8 +31,7 @@ export class TagService {
     result = result.map(tag => ({
      ...tag,
       articles:tag.articles.map(article=>({
-        ...article,
-        articleImg:convert(article.articleImg),
+        ...article
       }))
     }))
     return result

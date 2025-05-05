@@ -48,6 +48,5 @@ export class CommentController {
   ) {
     return await this.commentService.getArticleComments(articleId, page, limit);
   }
-
   
 }

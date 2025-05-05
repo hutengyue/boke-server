@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Article } from "../entities/article.entity";
 import { Repository } from "typeorm";
-import * as fs from "fs";
-import * as path from 'path';
 import convert from "../utils/convert";
+import axios from 'axios';
 
 
 @Injectable()
@@ -34,8 +33,7 @@ export class ArticleService {
 
     let result = {
       ...article,
-      articleImg: convert(article.articleImg),
-      articleMessage: fs.readFileSync(path.join('./public/',article.articleMessage),'utf-8'),
+      articleMessage: await (await axios.get(article.articleMessage)).data,
       categoryName: article.category?.categoryName,
       tagNames: article.tags?.map(tag => tag.tagName)
     }
@@ -52,7 +50,6 @@ export class ArticleService {
     })
     let result = articles.map(article=>({
       ...article,
-      articleImg:convert(article.articleImg)
     }))
     return result
   }

@@ -15,11 +15,32 @@ export class MessageService {
         let messages = await this.messageRepository.find({
             relations: ['user'],
         })
-        let result = messages.map(message=>({
+        let result = messages.map(({user, ...message})=>({
             ...message,
-            // user:convert(message.user.headImg)
-            user:message.user.headImg
+            headImg:user.headImg,
+            username:user.username
         }))
         return result
+    }
+
+    async sendMessage(userId: number, content: string) {
+        const message = this.messageRepository.create({
+            userId,
+            content
+        });
+        await this.messageRepository.save(message);
+        // 获取包含用户信息的完整消息
+        const messageWithUser = await this.messageRepository.findOne({
+            where: { messageId: message.messageId },
+            relations: ['user']
+        });
+
+        // 格式化返回数据
+        const { user, ...messageInfo } = messageWithUser;
+        return {
+            ...messageInfo,
+            headImg: user.headImg,
+            username: user.username
+        };
     }
 }

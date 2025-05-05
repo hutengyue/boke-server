@@ -27,10 +27,25 @@ export class FriendService {
   }
 
   async getFriends(userId: number) {
-    const user = await this.userRepository.findOne({
-      where: { userId: userId },
-      relations: ['friends']
-    });
-    return user ? user.friends : [];
+    const [user, otherUsers] = await Promise.all([
+      this.userRepository.findOne({
+        where: { userId: userId },
+        relations: ['friends']
+      }),
+      this.userRepository.find({
+        where: { friends: { userId: userId } },
+        relations: ['friends']
+      })
+    ]);
+
+    const directFriends = user ? user.friends : [];
+    const reverseFriends = otherUsers || [];
+
+    // 合并两个数组并去重
+    const allFriends = [...directFriends, ...reverseFriends];
+    const uniqueFriends = allFriends.filter((friend, index, self) =>
+      index === self.findIndex((f) => f.userId === friend.userId)
+    );
+    return uniqueFriends;
   }
 }

@@ -68,6 +68,10 @@ export class AuthService {
       this.codeStore.delete(user.email)
       let result = Object.assign(new User(), user)
       this.userRepository.insert(result);
+      await this.userRepository.createQueryBuilder().relation(User,"groups")
+      .of(result).add(1)
+      await this.userRepository.createQueryBuilder().relation(User, "friends")
+      .of(result).add(1);
       return {msg: '注册成功', type: 'success'}
     } else {
       return {msg: '验证码错误', type: 'error'}

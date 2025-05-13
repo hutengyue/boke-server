@@ -17,6 +17,33 @@ export class ArticleService {
     return this.articleRepository.find()
   }
 
+  async findByPage(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const [articles, total] = await this.articleRepository.findAndCount({
+      relations: ['tags', 'category'],
+      skip,
+      take: limit,
+      order: { createAt: 'DESC' }
+    });
+
+    const items = articles.map(article => ({
+      ...article,
+      articleImg: convert(article.articleImg),
+      categoryName: article.category?.categoryName,
+      tagNames: article.tags?.map(tag => tag.tagName)
+    }));
+    
+    return {
+      items,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  }
+
   async findByArticleId(articleId:number) {
     let article = await this.articleRepository.findOne({
       where: {articleId: articleId},
@@ -67,4 +94,6 @@ export class ArticleService {
     article.heat += 1;
     await this.articleRepository.save(article);
   }
+
+  
 }

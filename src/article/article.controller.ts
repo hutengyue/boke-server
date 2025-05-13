@@ -15,6 +15,12 @@ export class ArticleController {
     return this.articleService.findByArticleId(body.articleId)
   }
 
+  @Get('page')
+  findByPage(@Body() body: { page?: number; limit?: number }) {
+    return this.articleService.findByPage(body.page, body.limit);
+  }
+
+
   @Post('searchByCategory')
   findByCategory(@Body() body:any){
     return this.articleService.findByCategory(body.categoryId,body.pageNo,body.pageSize)

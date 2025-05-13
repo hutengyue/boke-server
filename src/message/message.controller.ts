@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query, ParseIntPipe, DefaultValuePipe } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { JwtGuard } from "../guard/jwt.guard";
 import type { Request } from "express";
@@ -10,6 +10,14 @@ export class MessageController {
   @Get()
   findAll(){
     return this.messageService.findAll()
+  }
+
+  @Get('page')
+  async findByPage(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return this.messageService.findByPage(page, limit);
   }
 
   @UseGuards(JwtGuard)

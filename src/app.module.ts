@@ -17,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { ApplyModule } from './apply/apply.module';
+import { PmessageModule } from './pmessage/pmessage.module';
 import config from "./config";
 
 @Module({
@@ -45,7 +46,8 @@ import config from "./config";
     CategoryModule,
     AuthModule,
     UploadModule,
-    ApplyModule],
+    ApplyModule,
+    PmessageModule],
   controllers: [AppController],
   providers: [AppService,WebsocketGateway],
 })

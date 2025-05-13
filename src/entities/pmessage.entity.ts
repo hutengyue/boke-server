@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn,ManyToOne,JoinColumn } from "typeorm";
 import { DateTransformer } from "../utils/dateTransform";
+import { User } from "./user.entity";
 
 @Entity("pmessage", { schema: "boke" })
 export class Pmessage {
@@ -17,4 +18,9 @@ export class Pmessage {
 
   @CreateDateColumn({ type:"datetime",name:"createAt" ,transformer:new DateTransformer()})
   createAt: Date;
+
+  @ManyToOne(()=>User,user=>user.pmessages)
+  @JoinColumn({name:"fromId"})
+  from:User
 }
+

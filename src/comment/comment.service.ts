@@ -35,8 +35,6 @@ export class CommentService {
   }
 
   async getArticleComments(articleId: number, page: number, limit: number) {
-    // ... existing code ...
-
     const [comments, total] = await this.commentRepository
       .createQueryBuilder('comment')
       .leftJoinAndSelect('comment.article', 'article')
@@ -51,16 +49,63 @@ export class CommentService {
       .take(limit)
       .getManyAndCount();
 
-    const formattedComments = comments.map(comment => ({
-      ...comment,
-      username: comment.user.username,
-      headImg: comment.user.headImg,
-      replies: comment.replies ? comment.replies.map(reply => ({
-        ...reply,
-        username: reply.user.username,
-        headImg: reply.user.headImg
-      })) : []
-    }));
+    const formattedComments = comments.map(comment => {
+      const { user, article, replies, ...commentData } = comment;
+      return {
+        ...commentData,
+        username: user.username,
+        headImg: user.headImg,
+        replies: replies ? replies.map(reply => {
+          const { user: replyUser, article: replyArticle, ...replyData } = reply;
+          return {
+            ...replyData,
+            username: replyUser.username,
+            headImg: replyUser.headImg
+          };
+        }) : []
+      };
+    });
+
+    return {
+      items: formattedComments,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  }
+
+  async getAllComments(page: number, limit: number) {
+    const [comments, total] = await this.commentRepository
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.article', 'article')
+      .leftJoinAndSelect('comment.user', 'user')
+      .leftJoinAndSelect('comment.replies', 'replies', 'replies.toId = comment.commentId')
+      .leftJoinAndSelect('replies.user', 'replyUser')
+      .orderBy('comment.createAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    const formattedComments = comments.map(comment => {
+      const { user, article, replies, ...commentData } = comment;
+      return {
+        ...commentData,
+        username: user.username,
+        headImg: user.headImg,
+        articleTitle: article.articleTitle,
+        replies: replies ? replies.map(reply => {
+          const { user: replyUser, ...replyData } = reply;
+          return {
+            ...replyData,
+            username: replyUser.username,
+            headImg: replyUser.headImg
+          };
+        }) : []
+      };
+    });
 
     return {
       items: formattedComments,

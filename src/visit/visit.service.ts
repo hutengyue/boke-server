@@ -55,8 +55,14 @@ export class VisitService {
       .where('visit.createAt >= :sixDaysAgo', { sixDaysAgo })
       .orderBy('visit.createAt', 'DESC')
       .getMany();
+    
+    const allVisits = await this.visitRepository
+      .createQueryBuilder('visit')
+      .orderBy('visit.createAt', 'DESC')
+      .getMany();
+
   
-    return [totalCount, recentVisits];
+    return [totalCount, recentVisits,allVisits];
   }
 
   async createVisitRecord(clientIp: string, browser: string, device: string, city: string | null, flag: boolean) {

@@ -39,7 +39,7 @@ export class CommentController {
       body.message
     );
   }
-//获取文章评论
+  //获取文章评论
   @Get('list')
   async getArticleComments(
     @Query('articleId', ParseIntPipe) articleId: number,
@@ -47,6 +47,14 @@ export class CommentController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
     return await this.commentService.getArticleComments(articleId, page, limit);
+  }
+
+  @Get('all')
+  async getAllComments(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return await this.commentService.getAllComments(page, limit);
   }
   
 }

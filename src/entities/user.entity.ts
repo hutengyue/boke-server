@@ -75,4 +75,7 @@ export class User {
 
   @ManyToMany(() => Group, group => group.members)
   groups: Group[];
+
+  @OneToMany(() => Pmessage, pmessage => pmessage.from)
+  pmessages: Pmessage[];
 }

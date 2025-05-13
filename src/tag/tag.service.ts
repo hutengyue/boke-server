@@ -23,6 +23,31 @@ export class TagService {
     return result
   }
 
+  async findByPage(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const [tags, total] = await this.tagRepository.findAndCount({
+      relations: ['articles'],
+      skip,
+      take: limit,
+      order: { createAt: 'DESC' }
+    });
+
+    const items = tags.map(tag => ({
+      ...tag,
+      number: tag.articles.length
+    }));
+    
+    return {
+      items,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  }
+
   async getArticles(tagId: number) {
     let result = await this.tagRepository.createQueryBuilder("tag")
       .leftJoinAndSelect("tag.articles", "article")

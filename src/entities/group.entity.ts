@@ -20,18 +20,7 @@ export class Group {
   @CreateDateColumn({ type: "datetime", name: "createAt", transformer: new DateTransformer() })
   createAt: Date;
 
-  @ManyToMany(() => User)
-  @JoinTable({
-    name: 'group_members',
-    joinColumn: {
-      name: 'groupId',
-      referencedColumnName: 'groupId'
-    },
-    inverseJoinColumn: {
-      name: 'userId',
-      referencedColumnName: 'userId'
-    }
-  })
+  @ManyToMany(() => User,user => user.groups)
   members: User[];
 
   @OneToMany(() => Gmessage, gmessage => gmessage.group)

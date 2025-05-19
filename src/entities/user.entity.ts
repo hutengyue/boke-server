@@ -74,6 +74,17 @@ export class User {
   comments: Comment[];
 
   @ManyToMany(() => Group, group => group.members)
+  @JoinTable({
+    name: 'group_members',
+    joinColumn: {
+      name: 'userId',
+      referencedColumnName: 'userId'
+    },
+    inverseJoinColumn: {
+      name: 'groupId',
+      referencedColumnName: 'groupId'
+    }
+  })
   groups: Group[];
 
   @OneToMany(() => Pmessage, pmessage => pmessage.from)

@@ -58,10 +58,10 @@ export class UserService {
   }
 
 
-  async getUsersByPage(page: number, limit: number) {
+  async getUsersByPage(page: number, pageSize: number) {
     const [users, total] = await this.userRepository.findAndCount({
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       order: {
         userId: 'DESC'  // 按用户ID降序排序
       }
@@ -72,8 +72,8 @@ export class UserService {
       meta: {
         total,
         page,
-        limit,
-        totalPages: Math.ceil(total / limit)
+        pageSize,
+        totalPages: Math.ceil(total / pageSize)
       }
     };
   }

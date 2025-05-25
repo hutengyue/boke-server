@@ -11,7 +11,7 @@ export class LogController {
 
   @Get()
   async findByPage(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number) {
-  return this.logService.findByPage(page, limit);
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) pageSize: number) {
+  return this.logService.findByPage(page, pageSize);
   }
 }

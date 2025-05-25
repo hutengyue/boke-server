@@ -13,11 +13,11 @@ export class LogService {
     return this.logRepository.find()
   }
 
-  async findByPage(page: number = 1, limit: number = 10) {
-    const skip = (page - 1) * limit;
+  async findByPage(page: number = 1, pageSize: number = 10) {
+    const skip = (page - 1) * pageSize;
     const [items, total] = await this.logRepository.findAndCount({
       skip,
-      take: limit,
+      take: pageSize,
       order: { createAt: 'DESC' }
     });
     
@@ -26,8 +26,8 @@ export class LogService {
       meta: {
         total,
         page,
-        limit,
-        totalPages: Math.ceil(total / limit)
+        pageSize,
+        totalPages: Math.ceil(total / pageSize)
       }
     };
   }

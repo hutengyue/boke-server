@@ -11,10 +11,10 @@ export class VisitService {
     private readonly visitRepository: Repository<Visit>,
   ) {}
 
-  async getVisit(page: number, limit: number) {
+  async getVisit(page: number, pageSize: number) {
     const [visits, total] = await this.visitRepository.findAndCount({
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       order: {
         createAt: 'DESC'  // 按创建时间降序排序
       }
@@ -25,8 +25,8 @@ export class VisitService {
       meta: {
         total,
         page,
-        limit,
-        totalPages: Math.ceil(total / limit)
+        pageSize,
+        totalPages: Math.ceil(total / pageSize)
       }
     };
   }

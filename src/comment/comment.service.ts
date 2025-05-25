@@ -34,19 +34,21 @@ export class CommentService {
     return comment;
   }
 
-  async getArticleComments(articleId: number, page: number, limit: number) {
+  async getArticleComments(articleId: number, page: number, pageSize: number) {
     const [comments, total] = await this.commentRepository
       .createQueryBuilder('comment')
       .leftJoinAndSelect('comment.article', 'article')
       .leftJoinAndSelect('comment.user', 'user')
       .leftJoinAndSelect('comment.replies', 'replies', 'replies.toId = comment.commentId')
       .leftJoinAndSelect('replies.user', 'replyUser')
+      .leftJoinAndSelect('replies.parent', 'parentComment')
+      .leftJoinAndSelect('parentComment.user', 'parentUser')
       .where('comment.articleId = :articleId', { articleId })
       .andWhere('comment.toId IS NULL')  // 只获取顶层评论
       .orderBy('comment.createAt', 'DESC')
       .addOrderBy('replies.createAt', 'ASC')  // 回复按时间正序，这样第一条回复就是最早的
-      .skip((page - 1) * limit)
-      .take(limit)
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
       .getManyAndCount();
 
     const formattedComments = comments.map(comment => {
@@ -56,11 +58,12 @@ export class CommentService {
         username: user.username,
         headImg: user.headImg,
         replies: replies ? replies.map(reply => {
-          const { user: replyUser, article: replyArticle, ...replyData } = reply;
+          const { user: replyUser, article: replyArticle, parent, ...replyData } = reply;
           return {
             ...replyData,
             username: replyUser.username,
-            headImg: replyUser.headImg
+            headImg: replyUser.headImg,
+            replyToUsername: parent.user.username
           };
         }) : []
       };
@@ -71,22 +74,24 @@ export class CommentService {
       meta: {
         total,
         page,
-        limit,
-        totalPages: Math.ceil(total / limit)
+        pageSize,
+        totalPages: Math.ceil(total / pageSize)
       }
     };
   }
 
-  async getAllComments(page: number, limit: number) {
+  async getAllComments(page: number, pageSize: number) {
     const [comments, total] = await this.commentRepository
       .createQueryBuilder('comment')
       .leftJoinAndSelect('comment.article', 'article')
       .leftJoinAndSelect('comment.user', 'user')
       .leftJoinAndSelect('comment.replies', 'replies', 'replies.toId = comment.commentId')
       .leftJoinAndSelect('replies.user', 'replyUser')
+      .leftJoinAndSelect('replies.parent', 'parentComment')
+      .leftJoinAndSelect('parentComment.user', 'parentUser')
       .orderBy('comment.createAt', 'DESC')
-      .skip((page - 1) * limit)
-      .take(limit)
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
       .getManyAndCount();
 
     const formattedComments = comments.map(comment => {
@@ -112,8 +117,8 @@ export class CommentService {
       meta: {
         total,
         page,
-        limit,
-        totalPages: Math.ceil(total / limit)
+        pageSize,
+        totalPages: Math.ceil(total / pageSize)
       }
     };
   }

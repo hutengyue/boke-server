@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../entities/user.entity';
 import { MailerService } from "@nestjs-modules/mailer";
@@ -41,7 +41,7 @@ export class AuthService {
 
   async sendMail(email:string){
     if(await this.userRepository.findOneBy({ email })){
-      return {msg:'该邮箱已被注册',type:'warning'}
+      return ({msg:'该邮箱已被注册',type:'warning'});
     }
     let code = String(Math.floor(Math.random() * 1000000)).padEnd(6, '0')
     const mail = {
@@ -56,25 +56,25 @@ export class AuthService {
     }
     this.codeStore.set(email,code)
     await this.mailService.sendMail(mail)
-    return {msg:'请注意接收邮件',type:'success'}
+    return ({msg:'请注意接收邮件',type:'success'});
   }
 
   async register(body: any) {
     let user = body.user
     if (body.regCode == this.codeStore.get(user.email)) {
       if (await this.userRepository.count({where: {username: user.username}}) > 0) {
-        return {msg:'已存在的用户名',type:'error'}
+        return ({msg:'已存在的用户名',type:'error'});
       }
       this.codeStore.delete(user.email)
       let result = Object.assign(new User(), user)
-      this.userRepository.insert(result);
+      result = await this.userRepository.save(result);
       await this.userRepository.createQueryBuilder().relation(User,"groups")
       .of(result).add(1)
       await this.userRepository.createQueryBuilder().relation(User, "friends")
       .of(result).add(1);
-      return {msg: '注册成功', type: 'success'}
+      return ({msg:'注册成功',type:'success'});
     } else {
-      return {msg: '验证码错误', type: 'error'}
+      return ({msg:'验证码错误',type:'error'});
     }
   }
 }

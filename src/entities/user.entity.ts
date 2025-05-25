@@ -21,7 +21,7 @@ export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "userId" })
   userId: number;
 
-  @Column("varchar", { name: "headImg", length: 255, default: () => "'image/Tom.jpg'"})
+  @Column("varchar", { name: "headImg", length: 255, default: () => "'https://file.cavalry.xin/boke/2025/04/20/Tom.jpg'"})
   headImg: string;
 
   @Column("varchar", { name: "username", length: 255 })

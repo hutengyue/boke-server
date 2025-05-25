@@ -17,20 +17,20 @@ export class ArticleService {
     return this.articleRepository.find()
   }
 
-  async findByPage(page: number = 1, limit: number = 10) {
-    const skip = (page - 1) * limit;
+  async findByPage(page: number = 1, pageSize: number = 10) {
+    const skip = (page - 1) * pageSize;
     const [articles, total] = await this.articleRepository.findAndCount({
-      relations: ['tags', 'category'],
+      relations: ['tags', 'category','comments'],
       skip,
-      take: limit,
+      take: pageSize,
       order: { createAt: 'DESC' }
     });
 
-    const items = articles.map(article => ({
+    const items = articles.map(({comments,...article}) => ({
       ...article,
-      articleImg: convert(article.articleImg),
       categoryName: article.category?.categoryName,
-      tagNames: article.tags?.map(tag => tag.tagName)
+      tagNames: article.tags?.map(tag => tag.tagName),
+      commentsCount: comments.length,
     }));
     
     return {
@@ -38,8 +38,8 @@ export class ArticleService {
       meta: {
         total,
         page,
-        limit,
-        totalPages: Math.ceil(total / limit)
+        pageSize,
+        totalPages: Math.ceil(total / pageSize)
       }
     };
   }

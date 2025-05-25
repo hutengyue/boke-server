@@ -44,17 +44,17 @@ export class CommentController {
   async getArticleComments(
     @Query('articleId', ParseIntPipe) articleId: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
   ) {
-    return await this.commentService.getArticleComments(articleId, page, limit);
+    return await this.commentService.getArticleComments(articleId, page, pageSize);
   }
 
   @Get('all')
   async getAllComments(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
   ) {
-    return await this.commentService.getAllComments(page, limit);
+    return await this.commentService.getAllComments(page, pageSize);
   }
   
 }

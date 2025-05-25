@@ -14,11 +14,34 @@ export class CategoryService {
     return this.categoryRepository.find()
   }
 
-  async getArticles(categoryId){
-    let category = await this.categoryRepository.findOne({
-      where:{ categoryId },
-      relations:['articles']
-    })
-    return category.articles
+  // async getArticles(categoryId){
+  //   let category = await this.categoryRepository.findOne({
+  //     where:{ categoryId },
+  //     relations:['articles']
+  //   })
+  //   return category.articles
+  // }
+
+  async findOne(categoryId: number) {
+    const category = await this.categoryRepository.findOne({
+      where: { categoryId },
+      relations: [
+        'articles',
+        'articles.tags',
+        'articles.comments',
+        'articles.category'
+      ]
+    });
+
+    if (category && category.articles) {
+      category.articles = category.articles.map(article => ({
+        ...article,
+        commentsCount: article.comments?.length || 0,
+        comments:[],
+        categoryName: article.category?.categoryName || '',
+      }));
+    }
+
+    return category;
   }
 }

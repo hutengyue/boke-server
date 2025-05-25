@@ -17,9 +17,9 @@ export class UserController {
   @Get('list')
   async getUsersByPage(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
   ) {
-    return await this.userService.getUsersByPage(page, limit);
+    return await this.userService.getUsersByPage(page, pageSize);
   }
 
   // @UseGuards(JwtGuard)

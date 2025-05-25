@@ -26,11 +26,11 @@ export class MessageService {
         return result
     }
 
-    async findByPage(page: number, limit: number) {
+    async findByPage(page: number, pageSize: number) {
         const [messages, total] = await this.messageRepository.findAndCount({
             relations: ['user'],
-            skip: (page - 1) * limit,
-            take: limit,
+            skip: (page - 1) * pageSize,
+            take: pageSize,
             order: {
                 createAt: 'DESC'
             }
@@ -47,8 +47,8 @@ export class MessageService {
             meta: {
                 total,
                 page,
-                limit,
-                totalPages: Math.ceil(total / limit)
+                pageSize,
+                totalPages: Math.ceil(total / pageSize)
             }
         };
     }

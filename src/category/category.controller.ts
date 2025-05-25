@@ -11,6 +11,11 @@ export class CategoryController {
 
   @Get(':categoryId')
   findOne(@Param('categoryId') categoryId: number){
-    return this.categoryService.getArticles(categoryId)
+    return this.categoryService.findOne(categoryId)
   }
+
+  // @Get(':categoryId')
+  // getArticles(@Param('categoryId') categoryId: number){
+  //   return this.categoryService.getArticles(categoryId)
+  // }
 }

@@ -44,4 +44,30 @@ export class CategoryService {
 
     return category;
   }
+
+
+  async findByPage(page: number = 1, pageSize: number = 10) {
+    const skip = (page - 1) * pageSize;
+    const [tags, total] = await this.categoryRepository.findAndCount({
+      relations: ['articles'],
+      skip,
+      take: pageSize,
+      order: { createAt: 'DESC' }
+    });
+
+    const items = tags.map(tag => ({
+      ...tag,
+      number: tag.articles.length
+    }));
+    
+    return {
+      items,
+      meta: {
+        total,
+        page,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize)
+      }
+    };
+  }
 }

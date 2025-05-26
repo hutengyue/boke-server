@@ -14,9 +14,9 @@ export class VisitController {
   @Get()
   async getVisit(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
   ) {
-    const result = await this.visitService.getVisit(page, limit);
+    const result = await this.visitService.getVisit(page, pageSize);
     return result;
   }
   

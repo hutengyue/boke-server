@@ -19,6 +19,9 @@ export class Pmessage {
   @CreateDateColumn({ type:"datetime",name:"createAt" ,transformer:new DateTransformer()})
   createAt: Date;
 
+  @Column("varchar", { default: "private" })
+  type: string;
+
   @ManyToOne(()=>User,user=>user.pmessages)
   @JoinColumn({name:"fromId"})
   from:User

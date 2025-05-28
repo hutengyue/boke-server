@@ -63,22 +63,30 @@ export class GmessageService {
         const skip = (pageNo - 1) * pageSize;
         
         // 构建查询
-        const queryBuilder = this.gmessageRepository.createQueryBuilder('gmessage')
+        const [messages, total] = await this.gmessageRepository.createQueryBuilder('gmessage')
             .leftJoinAndSelect('gmessage.user', 'user')
             .leftJoinAndSelect('gmessage.group', 'group')
             .where('gmessage.groupId = :groupId', { groupId })
-            .orderBy('gmessage.createAt', 'ASC')
+            .orderBy('gmessage.createAt', 'DESC')
             .skip(skip)
-            .take(pageSize);
+            .take(pageSize)
+            .getManyAndCount();
         
-        // 获取分页消息数据
-        const messages = await queryBuilder.getMany();
-    
         // 处理返回结果
-        return messages.map(message => ({
+        const items = messages.map(message => ({
             ...message,
             createAt: convertTime(message.createAt)
-        }))
+        }));
+
+        return {
+            items,
+            meta: {
+                total,
+                pageNo,
+                pageSize,
+                totalPages: Math.ceil(total / pageSize)
+            }
+        };
     }
 
     async send(userId, message,groupId) {

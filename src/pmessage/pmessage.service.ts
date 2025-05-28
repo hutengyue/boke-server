@@ -43,20 +43,19 @@ export class PmessageService {
   async getChatHistory(userId1: number, userId2: number, pageNo: number, pageSize: number) {
     const skip = (pageNo - 1) * pageSize;
 
-    const queryBuilder = this.pmessageRepository.createQueryBuilder('pmessage')
+    const [messages, total] = await this.pmessageRepository.createQueryBuilder('pmessage')
       .leftJoinAndSelect('pmessage.from', 'from')
       .where(new Brackets(qb => {
         qb.where('pmessage.fromId = :userId1 AND pmessage.toId = :userId2', { userId1, userId2 })
           .orWhere('pmessage.fromId = :userId2 AND pmessage.toId = :userId1', { userId1, userId2 });
       }))
-      .orderBy('pmessage.createAt', 'ASC')
+      .orderBy('pmessage.createAt', 'DESC')
       .skip(skip)
-      .take(pageSize);
-
-    const [messages] = await queryBuilder.getManyAndCount();
+      .take(pageSize)
+      .getManyAndCount();
 
     // 格式化消息数据
-    const formattedMessages = messages.map(({from, ...message}) => ({
+    const items = messages.map(({from, ...message}) => ({
       ...message,
       createAt: convertTime(message.createAt),
       user: {
@@ -66,7 +65,15 @@ export class PmessageService {
       }
     }));
 
-    return formattedMessages;
+    return {
+      items,
+      meta: {
+        total,
+        pageNo: pageNo,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize)
+      }
+    };
   }
   
 

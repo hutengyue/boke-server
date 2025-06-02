@@ -16,8 +16,8 @@ export class ArticleController {
   }
 
   @Get('page')
-  findByPage(@Body() body: { page?: number; limit?: number }) {
-    return this.articleService.findByPage(body.page, body.limit);
+  findByPage(@Body() body: { page?: number; pageSize?: number }) {
+    return this.articleService.findByPage(body.page, body.pageSize);
   }
 
 
@@ -41,4 +41,18 @@ export class ArticleController {
     const heat = await this.articleService.incrementHeat(articleId);
     return { heat };
   }
+
+  @Post('create')
+  async createArticle(@Body() createArticleDto: {
+    articleTitle: string;
+    articleLabel: string;
+    articleImg: string;
+    articleMessage: string;
+    categoryId: number;
+    tags: number[];
+  }) {
+    return this.articleService.createArticle(createArticleDto);
+  }
+
+  
 }

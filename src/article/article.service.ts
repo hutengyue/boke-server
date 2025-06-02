@@ -95,5 +95,26 @@ export class ArticleService {
     await this.articleRepository.save(article);
   }
 
+  async createArticle(createArticleDto: {
+    articleTitle: string;
+    articleLabel: string;
+    articleImg: string;
+    articleMessage: string;
+    categoryId: number;
+    tags: number[];
+  }) {
+    const article = this.articleRepository.create({
+      articleTitle: createArticleDto.articleTitle,
+      articleLabel: createArticleDto.articleLabel,
+      articleImg: createArticleDto.articleImg,
+      articleMessage: createArticleDto.articleMessage,
+      categoryId: createArticleDto.categoryId,
+      tags: createArticleDto.tags.map(id => ({ tagId: id }))
+    });
+
+    await this.articleRepository.save(article);
+    return {msg:'发布成功',type:'success'};
+  }
+
   
 }

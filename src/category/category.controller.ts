@@ -17,6 +17,7 @@ export class CategoryController {
   @Get('page')
   findByPage(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
             @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number) {
+    console.log(page,pageSize)
     return this.categoryService.findByPage(page, pageSize);
   }
 

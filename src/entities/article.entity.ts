@@ -30,7 +30,7 @@ export class Article {
   @Column("varchar", { name: "articleImg", length: 255 })
   articleImg: string;
 
-  @Column("int", { name: "heat" })
+  @Column("int", { name: "heat" ,default:0})
   heat: number;
 
   @CreateDateColumn({ type:"datetime",name:"createAt" ,transformer:new DateTransformer()})

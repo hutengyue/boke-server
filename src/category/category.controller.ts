@@ -9,20 +9,16 @@ export class CategoryController {
     return this.categoryService.findAll()
   }
 
-  @Get(':categoryId')
-  findOne(@Param('categoryId') categoryId: number){
+  @Post('')
+  findOne(@Body('categoryId') categoryId: number){
     return this.categoryService.findOne(categoryId)
   }
 
   @Get('page')
-  findByPage(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-            @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number) {
-    console.log(page,pageSize)
+  findByPage(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
+  ) {
     return this.categoryService.findByPage(page, pageSize);
   }
-
-  // @Get(':categoryId')
-  // getArticles(@Param('categoryId') categoryId: number){
-  //   return this.categoryService.getArticles(categoryId)
-  // }
 }

@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,ParseIntPipe,
+  Query,DefaultValuePipe} from '@nestjs/common';
 import { ArticleService } from './article.service';
 
 @Controller('article')
@@ -16,8 +17,9 @@ export class ArticleController {
   }
 
   @Get('page')
-  findByPage(@Body() body: { page?: number; pageSize?: number }) {
-    return this.articleService.findByPage(body.page, body.pageSize);
+  findByPage(@Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number) {
+    return this.articleService.findByPage(page,pageSize);
   }
 
 

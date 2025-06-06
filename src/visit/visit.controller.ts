@@ -36,11 +36,13 @@ export class VisitController {
     const forwarded = req.headers['x-forwarded-for'];
     const realIp = req.headers['x-real-ip'];
 
-    const clientIp =
+    
+    let clientIp =
       (typeof forwarded === 'string' && forwarded.split(',')[0].trim()) ||
       (typeof realIp === 'string' && realIp.trim()) ||
       req.socket?.remoteAddress ||
       '';
+    if(clientIp == '::1') clientIp = '112.10.132.22'
 
     const visit = await this.visitService.createVisitRecord(clientIp, body.browser, body.device, body.city, body.flag);
     return { ip: clientIp, map: visit.location ? { city: visit.location } : {} };

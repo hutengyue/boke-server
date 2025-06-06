@@ -6,6 +6,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule,{
     cors:true
   });
+  //信任代理
+  app.set('trust proxy', true);
+  //增加前缀
   app.setGlobalPrefix('api')
   await app.listen(config.host.port);
 }

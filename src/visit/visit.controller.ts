@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body,Query,DefaultValuePipe,ParseIntPipe} from '@nestjs/common';
+import { Controller, Get, Post, Body,Query,DefaultValuePipe,ParseIntPipe,Req} from '@nestjs/common';
 import { VisitService } from './visit.service';
+import { Request } from 'express';
 
 @Controller('visit')
 export class VisitController {
@@ -27,8 +28,20 @@ export class VisitController {
   }
 
   @Post()
-  async createVisit(@Body() body: { flag: boolean; browser: string; device: string; city: string | null }) {
-    const clientIp = "112.10.191.62";
+    async createVisit(
+    @Body() body: { flag: boolean; browser: string; device: string; city: string | null },
+    @Req() req: Request
+  ) {
+
+    const forwarded = req.headers['x-forwarded-for'];
+    const realIp = req.headers['x-real-ip'];
+
+    const clientIp =
+      (typeof forwarded === 'string' && forwarded.split(',')[0].trim()) ||
+      (typeof realIp === 'string' && realIp.trim()) ||
+      req.socket?.remoteAddress ||
+      '';
+
     const visit = await this.visitService.createVisitRecord(clientIp, body.browser, body.device, body.city, body.flag);
     return { ip: clientIp, map: visit.location ? { city: visit.location } : {} };
   }

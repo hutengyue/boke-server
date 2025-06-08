@@ -51,14 +51,24 @@ export class TagService {
   async getArticles(tagId: number) {
     let result = await this.tagRepository.createQueryBuilder("tag")
       .leftJoinAndSelect("tag.articles", "article")
+      .leftJoinAndSelect("article.category", "category")
+      .leftJoinAndSelect("article.tags", "articleTags")
       .where("tag.tagId = :tagId", {tagId: tagId})
       .getMany();
-    result = result.map(tag => ({
-     ...tag,
-      articles:tag.articles.map(article=>({
-        ...article
-      }))
-    }))
-    return result
+    
+    const transformedResult = result.map(tag => {
+      const { articles, ...tagRest } = tag;
+      return {
+        ...tagRest,
+        articles: articles.map(article => {
+          return {
+            ...article,
+            categoryName: article.category.categoryName
+          }
+        })
+      };
+    });
+    
+    return transformedResult[0];
   }
 }

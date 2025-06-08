@@ -12,7 +12,7 @@ export default {
   },
   "jwt": {
     "secretOrKey": "hutengyue123!!!!",
-    "expiresIn": '12h'
+    "expiresIn": '72h'
   },
   "mail":{
     "from":'"Cavalry"<1125469202@qq.com>',

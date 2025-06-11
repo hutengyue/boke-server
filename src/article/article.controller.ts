@@ -56,5 +56,18 @@ export class ArticleController {
     return this.articleService.createArticle(createArticleDto);
   }
 
-  
+  @Patch(':id')
+  async updateArticle(
+    @Param('id', ParseIntPipe) articleId: number,
+    @Body() updateArticleDto: {
+      articleTitle?: string;
+      articleLabel?: string;
+      articleImg?: string;
+      articleMessage?: string;
+      categoryId?: number;
+      tags?: number[];
+    }
+  ) {
+    return this.articleService.updateArticle(articleId, updateArticleDto);
+  }
 }

@@ -116,5 +116,39 @@ export class ArticleService {
     return {msg:'发布成功',type:'success'};
   }
 
-  
+  async updateArticle(
+    articleId: number,
+    updateArticleDto: {
+      articleTitle?: string;
+      articleLabel?: string;
+      articleImg?: string;
+      articleMessage?: string;
+      categoryId?: number;
+      tags?: number[];
+    }
+  ) {
+    const article = await this.articleRepository.findOne({
+      where: { articleId },
+      relations: ['tags']
+    });
+
+    if (!article) {
+      throw new Error('文章不存在');
+    }
+
+    // 更新基本字段
+    if (updateArticleDto.articleTitle) article.articleTitle = updateArticleDto.articleTitle;
+    if (updateArticleDto.articleLabel) article.articleLabel = updateArticleDto.articleLabel;
+    if (updateArticleDto.articleImg) article.articleImg = updateArticleDto.articleImg;
+    if (updateArticleDto.articleMessage) article.articleMessage = updateArticleDto.articleMessage;
+    if (updateArticleDto.categoryId) article.categoryId = updateArticleDto.categoryId;
+
+    // 更新标签关系
+    if (updateArticleDto.tags) {
+      article.tags = updateArticleDto.tags.map(id => ({ tagId: id } as any));
+    }
+
+    await this.articleRepository.save(article);
+    return { msg: '更新成功', type: 'success' };
+  }
 }

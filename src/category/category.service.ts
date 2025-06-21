@@ -16,6 +16,7 @@ export class CategoryService {
 
   async findByPage(page: number = 1, pageSize: number = 10) {
     const [items, total] = await this.categoryRepository.findAndCount({
+      relations: ['articles'],
       skip: (page - 1) * pageSize,
       take: pageSize,
       order: {
@@ -23,8 +24,14 @@ export class CategoryService {
       }
     });
 
+    const itemsWithArticleCount = items.map(item => ({
+      ...item,
+      number: item.articles?.length || 0,
+      articles: undefined
+    }));
+
     return {
-      items,
+      items: itemsWithArticleCount,
       meta: {
         total,
         page,

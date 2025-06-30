@@ -151,4 +151,16 @@ export class ArticleService {
     await this.articleRepository.save(article);
     return { msg: '更新成功', type: 'success' };
   }
+
+  async updateArticleMessage(articleId: number, articleMessage: string) {
+    const article = await this.articleRepository.findOneBy({ articleId });
+    
+    if (!article) {
+      throw new Error('文章不存在');
+    }
+
+    article.articleMessage = articleMessage;
+    await this.articleRepository.save(article);
+    return { msg: '文章内容更新成功', type: 'success' };
+  }
 }

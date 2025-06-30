@@ -10,13 +10,7 @@ export class UploadService {
     private client: any;
 
     constructor() {
-        // 初始化 OSS 客户端
-        this.client = new OSS({
-            bucket: 'cavalryy',
-            region: 'oss-cn-hangzhou',
-            accessKeyId: 'YOUR_ACCESS_KEY_ID',
-            accessKeySecret: 'YOUR_ACCESS_KEY_SECRET'
-        });
+
     }
 
     GenerateSignature = async () => {
@@ -112,6 +106,7 @@ export class UploadService {
             x_oss_date: formattedDate,
             signature: signature,
             dir: 'user-dir', // 指定上传到OSS的文件前缀
+            endpoint:'file.cavalry.xin',//自定义域名
             security_token: client.options.stsToken,
             bucket: client.options.bucket, // 目标Bucket名称
             region: client.options.region, // 目标Bucket所在地域

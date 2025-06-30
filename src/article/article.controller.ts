@@ -44,6 +44,14 @@ export class ArticleController {
     return { heat };
   }
 
+  @Post('message/update')
+  async updateArticleMessage(
+    @Body('articleId', ParseIntPipe) articleId: number,
+    @Body('articleMessage') articleMessage: string
+  ) {
+    return this.articleService.updateArticleMessage(articleId, articleMessage);
+  }
+  
   @Post('create')
   async createArticle(@Body() createArticleDto: {
     articleTitle: string;
